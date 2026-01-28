@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaveForm - Eksplorasi Dunia Ombak</title>
+    
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* SAC Color Palette - dari screenshot yang Anda kirim */
+            --primary-blue: #1B9FD8;
+            --deep-blue: #0B4F7F;
+            --light-blue: #7EC8E8;
+            --accent-blue: #2AA6DB;
+            --white: #FFFFFF;
+            --light-gray: #F5F9FC;
+            --dark-gray: #333333;
+            --gradient-overlay: linear-gradient(135deg, rgba(27, 159, 216, 0.9) 0%, rgba(11, 79, 127, 0.9) 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: var(--white);
+            color: var(--dark-gray);
+        }
+        
+        /* ============= LANDING PAGE ============= */
+        .landing-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--deep-blue);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .landing-page.hide {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+        }
+        
+        /* Video Background Container */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .video-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-overlay);
+            z-index: 1;
+        }
+        
+        /* ⚠️ UBAH SRC VIDEO DI SINI ⚠️ */
+        .landing-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+            animation: videoZoom 25s ease-in-out infinite;
+        }
+        
+        @keyframes videoZoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        
+        .landing-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2rem;
+            max-width: 1400px;
+        }
+        
+        .landing-logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 3rem;
+            animation: logoFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        .landing-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            text-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: titleFadeIn 1s ease-out 0.3s backwards;
+        }
+        
+        @keyframes titleFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .landing-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+            font-weight: 300;
+            color: var(--light-blue);
+            margin-bottom: 4rem;
+            letter-spacing: 0.05em;
+            animation: titleFadeIn 1s ease-out 0.5s backwards;
+        }
+        
+        .next-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 1.3rem 3.5rem;
+            background: var(--primary-blue);
+            border: 3px solid var(--light-blue);
+            color: var(--white);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: btnPulse 2s ease-in-out infinite, titleFadeIn 1s ease-out 0.7s backwards;
+        }
+        
+        .next-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+        
+        .next-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(27, 159, 216, 0.6);
+            border-color: var(--white);
+        }
+        
+        .next-btn:hover::before {
+            left: 0;
+        }
+        
+        .next-btn:hover {
+            color: var(--deep-blue);
+        }
+        
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(27, 159, 216, 0.4); }
+            50% { box-shadow: 0 15px 50px rgba(27, 159, 216, 0.7); }
+        }
+        
+        .arrow-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+        
+        .next-btn:hover .arrow-icon {
+            transform: translateX(5px);
+        }
+        
+        /* ============= MAIN CONTENT ============= */
+        .main-content {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        .main-content.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(11, 79, 127, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 0;
+            z-index: 1000;
+            border-bottom: 2px solid rgba(27, 159, 216, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 1rem 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: rgba(11, 79, 127, 1);
+        }
+        
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-brand:hover {
+            color: var(--light-blue);
+            transform: translateY(-2px);
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+        
+        .nav-link {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--light-blue);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--light-blue);
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Mobile Menu */
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        .mobile-toggle span {
+            width: 30px;
+            height: 3px;
+            background: var(--white);
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        /* Page Sections */
+        .page-section {
+            display: none;
+            padding-top: 100px;
+        }
+        
+        .page-section.active {
+            display: block;
+            animation: pageSlideIn 0.6s ease-out;
+        }
+        
+        @keyframes pageSlideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ============= HOME PAGE ============= */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1B9FD8 0%, #0B4F7F 100%);
+        }
+        
+        .hero-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .hero-video-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 79, 127, 0.6);
+            z-index: 1;
+        }
+        
+        /* ⚠️ UBAH SRC VIDEO HERO DI SINI ⚠️ */
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1400px;
+            padding: 3rem;
+        }
+        
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .hero-description {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            font-weight: 300;
+            color: var(--light-blue);
+            margin-bottom: 3rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        /* Wave Types Grid */
+        .wave-types-section {
+            padding: 8rem 3rem;
+            background: var(--light-gray);
+        }
+        
+        .section-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 800;
+            color: var(--deep-blue);
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .section-subtitle {
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
+            font-weight: 400;
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .wave-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .wave-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(11, 79, 127, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        
+        .wave-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(27, 159, 216, 0.3);
+            border-color: var(--primary-blue);
+        }
+        
+        .wave-card-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .wave-card:hover .wave-card-image {
+            transform: scale(1.1);
+        }
+        
+        .wave-card-content {
+            padding: 2rem;
+        }
+        
+        .wave-card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+        
+        .wave-card-description {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--dark-gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .wave-card-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: var(--primary-blue);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .wave-card-btn:hover {
+            background: var(--deep-blue);
+            transform: translateX(5px);
+        }
+        
+        /* ============= WAVE DETAIL PAGES ============= */
+        .wave-detail-section {
+            padding: 8rem 3rem;
+            min-height: 100vh;
+            background: var(--white);
+        }
+        
+        .detail-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .detail-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+        
+        .detail-title {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-weight: 900;
+            color: var(--deep-blue);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .detail-subtitle {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            font-weight: 300;
+            color: var(--primary-blue);
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        /* ⚠️ GANTI GAMBAR DI SINI ⚠️ */
+        .detail-image-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(11, 79, 127, 0.2);
+        }
+        
+        .detail-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            margin-bottom: 5rem;
+        }
+        
+        .detail-text {
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--dark-gray);
+            line-height: 1.9;
+        }
+        
+        .detail-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .detail-text p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-features {
+            background: var(--light-gray);
+            padding: 3rem;
+            border-radius: 20px;
+            border-left: 6px solid var(--primary-blue);
+        }
+        
+        .detail-features h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            margin-bottom: 2rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-list li {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.7;
+        }
+        
+        .feature-list li::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem 2.5rem;
+            background: var(--deep-blue);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 3rem;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary-blue);
+            transform: translateX(-5px);
+        }
+        
+        /* ============= FOOTER ============= */
+        .footer {
+            background: var(--deep-blue);
+            color: var(--white);
+            padding: 4rem 3rem 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--light-blue);
+        }
+        
+        .footer-text {
+            font-size: 1rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2rem;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* ============= RESPONSIVE ============= */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background: var(--deep-blue);
+                flex-direction: column;
+                padding: 8rem 2rem 2rem;
+                gap: 2rem;
+                transition: right 0.4s ease;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.3);
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .mobile-toggle {
+                display: flex;
+            }
+            
+            .mobile-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(8px, 8px);
+            }
+            
+            .mobile-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .mobile-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(8px, -8px);
+            }
+            
+            .detail-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 2rem;
+            }
+            
+            .wave-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .wave-types-section,
+            .wave-detail-section {
+                padding: 5rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- =============== LANDING PAGE =============== -->
+    <div class="landing-page" id="landingPage">
+        <div class="video-background">
+            <!-- ⚠️ UBAH VIDEO ANDA DI SINI ⚠️ -->
+            <!-- Ganti src dengan path video Anda -->
+            <video class="landing-video" autoplay muted loop playsinline>
+                <source src="assets/Waves.mp4" type="video/mp4">
+                <!-- Fallback jika video tidak tersedia -->
+            </video>
+        </div>
+        
+        <div class="landing-content">
+            <!-- ⚠️ UBAH LOGO DI SINI ⚠️ -->
+            <!-- Ganti src dengan path logo Anda -->
+            <img src="assets/Logo.png" alt="WaveForm Logo" class="landing-logo">
+            
+            <h1 class="landing-title">WaveForm</h1>
+            <p class="landing-subtitle">Eksplorasi Fenomena Ombak Laut</p>
+            
+            <button class="next-btn" onclick="enterApp()">
+                <span>Next</span>
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- =============== MAIN CONTENT =============== -->
+    <div class="main-content" id="mainContent">
+        
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-container">
+                <a href="#" class="nav-brand" onclick="showPage('home'); return false;">WaveForm</a>
+                
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#" class="nav-link active" onclick="showPage('home'); return false;">Home</a></li>
+                    <li><a href="#" class="nav-link" onclick="showPage('about'); return false;">About</a></li>
+                    <li><a href="#" class="nav-link" onclick="showPage('gallery'); return false;">Gallery</a></li>
+                    <li><a href="#" class="nav-link" onclick="showPage('contact'); return false;">Contact</a></li>
+                </ul>
+                
+                <div class="mobile-toggle" id="mobileToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- =============== HOME PAGE =============== -->
+        <section class="page-section active" id="homePage">
+            
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-video-bg">
+                    <!-- ⚠️ UBAH VIDEO HERO DI SINI ⚠️ -->
+                    <video class="hero-video" autoplay muted loop playsinline>
+                        <source src="assets/ocean.mp4" type="video/mp4">
+                    </video>
+                </div>
+                
+                <div class="hero-content">
+                    <h1 class="hero-title">Memahami Kekuatan Ombak</h1>
+                    <p class="hero-description">
+                        Jelajahi berbagai jenis ombak laut, dari Wind Wave yang lembut hingga Tsunami yang dahsyat. 
+                        Pelajari karakteristik, pembentukan, dan dampak setiap fenomena ombak.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Wave Types Grid -->
+            <div class="wave-types-section">
+                <div class="section-container">
+                    <h2 class="section-title">Jenis-Jenis Ombak</h2>
+                    <p class="section-subtitle">
+                        Klik pada setiap kartu untuk mempelajari lebih lanjut tentang karakteristik dan fenomena unik setiap tipe ombak
+                    </p>
+                    
+                    <div class="wave-grid">
+                        
+                        <!-- Wind Wave Card -->
+                        <div class="wave-card" onclick="showPage('windwave')">
+                            <!-- ⚠️ UBAH GAMBAR DI SINI ⚠️ -->
+                            <img src="assets/wind waves.jpeg" alt="Wind Wave" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Wind Wave</h3>
+                                <p class="wave-card-description">
+                                    Ombak yang terbentuk akibat hembusan angin di permukaan laut. Merupakan jenis ombak paling umum yang kita lihat sehari-hari.
+                                </p>
+                                <span class="wave-card-btn">Pelajari Lebih Lanjut →</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Swell Card -->
+                        <div class="wave-card" onclick="showPage('swell')">
+                            <!-- ⚠️ UBAH GAMBAR DI SINI ⚠️ -->
+                            <img src="assets/swellwaves.jpeg" alt="Swell" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Swell</h3>
+                                <p class="wave-card-description">
+                                    Ombak yang telah keluar dari area pembentukan dan merambat melintasi lautan dengan pola yang lebih teratur dan konsisten.
+                                </p>
+                                <span class="wave-card-btn">Pelajari Lebih Lanjut →</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Tsunami Card -->
+                        <div class="wave-card" onclick="showPage('tsunami')">
+                            <!-- ⚠️ UBAH GAMBAR DI SINI ⚠️ -->
+                            <img src="assets/Tsunami.jpeg" alt="Tsunami" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Tsunami</h3>
+                                <p class="wave-card-description">
+                                    Gelombang laut raksasa yang disebabkan oleh gempa bumi, letusan gunung berapi, atau tanah longsor di bawah laut.
+                                </p>
+                                <span class="wave-card-btn">Pelajari Lebih Lanjut →</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Tidal Wave Card -->
+                        <div class="wave-card" onclick="showPage('tidalwave')">
+                            <!-- ⚠️ UBAH GAMBAR DI SINI ⚠️ -->
+                            <img src="assets/Tidal.jpg" alt="Tidal Wave" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Tidal Wave</h3>
+                                <p class="wave-card-description">
+                                    Ombak yang disebabkan oleh gaya gravitasi bulan dan matahari, menciptakan fenomena pasang surut air laut.
+                                </p>
+                                <span class="wave-card-btn">Pelajari Lebih Lanjut →</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Rogue Wave Card -->
+                        <div class="wave-card" onclick="showPage('roguewave')">
+                            <!-- ⚠️ UBAH GAMBAR DI SINI ⚠️ -->
+                            <img src="assets/Rogue.jpeg" alt="Rogue Wave" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Rogue Wave</h3>
+                                <p class="wave-card-description">
+                                    Gelombang raksasa yang muncul tiba-tiba di lautan terbuka, jauh lebih besar dari ombak di sekitarnya dan sangat berbahaya.
+                                </p>
+                                <span class="wave-card-btn">Pelajari Lebih Lanjut →</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Seiche Card -->
+                        <div class="wave-card" onclick="showPage('seiche')">
+                            <!-- ⚠️ UBAH GAMBAR DI SINI ⚠️ -->
+                            <img src="assets/Seiche.avif" alt="Seiche" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Seiche</h3>
+                                <p class="wave-card-description">
+                                    Osilasi permukaan air dalam perairan tertutup atau semi-tertutup seperti danau, teluk, atau pelabuhan.
+                                </p>
+                                <span class="wave-card-btn">Pelajari Lebih Lanjut →</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+        
+        <!-- =============== WIND WAVE DETAIL PAGE =============== -->
+        <section class="page-section" id="windwavePage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    
+                    <div class="detail-header">
+                        <h1 class="detail-title">Wind Wave</h1>
+                        <p class="detail-subtitle">Ombak Angin - Fenomena Paling Umum di Lautan</p>
+                    </div>
+                    
+                    <!-- ⚠️ UBAH GAMBAR DETAIL DI SINI ⚠️ -->
+                    <div class="detail-image-container">
+                        <img src="assets/wind waves.jpeg" alt="Wind Wave Detail" class="detail-image">
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Apa itu Wind Wave?</h3>
+                            <p>
+                                Wind Wave atau ombak angin adalah gelombang laut yang terbentuk akibat hembusan angin di permukaan laut. 
+                                Ini adalah jenis ombak yang paling sering kita lihat dan rasakan saat berada di pantai.
+                            </p>
+                            <p>
+                                Ketika angin bertiup melintasi permukaan air, energi dari angin ditransfer ke air, 
+                                menciptakan gelombang. Semakin kuat angin, semakin besar ombak yang terbentuk.
+                            </p>
+                            
+                            <h3>Proses Pembentukan</h3>
+                            <p>
+                                Pembentukan wind wave dipengaruhi oleh tiga faktor utama: kecepatan angin, durasi angin bertiup, 
+                                dan jarak tempuh angin di atas permukaan air (fetch). Kombinasi ketiga faktor ini menentukan 
+                                ukuran dan kekuatan ombak yang terbentuk.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Karakteristik Utama</h3>
+                            <ul class="feature-list">
+                                <li>Tinggi ombak: 0.3 - 3 meter (kondisi normal)</li>
+                                <li>Periode gelombang: 1 - 10 detik</li>
+                                <li>Kecepatan rambat: 5 - 20 m/s</li>
+                                <li>Area pembentukan: Permukaan laut terbuka</li>
+                                <li>Frekuensi: Sangat tinggi, terjadi setiap hari</li>
+                                <li>Dampak: Minimal hingga sedang untuk aktivitas laut</li>
+                                <li>Manfaat: Ideal untuk surfing, sailing, dan olahraga air</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== SWELL DETAIL PAGE =============== -->
+        <section class="page-section" id="swellPage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    
+                    <div class="detail-header">
+                        <h1 class="detail-title">Swell</h1>
+                        <p class="detail-subtitle">Ombak Jarak Jauh yang Teratur dan Konsisten</p>
+                    </div>
+                    
+                    <!-- ⚠️ UBAH GAMBAR DETAIL DI SINI ⚠️ -->
+                    <div class="detail-image-container">
+                        <img src="assets/swellwaves.jpeg" alt="Swell Detail" class="detail-image">
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Apa itu Swell?</h3>
+                            <p>
+                                Swell adalah ombak yang telah keluar dari area pembentukan asalnya dan merambat melintasi lautan. 
+                                Berbeda dengan wind wave, swell memiliki pola yang lebih teratur, konsisten, dan dapat menempuh jarak ribuan kilometer.
+                            </p>
+                            <p>
+                                Saat wind wave bergerak menjauh dari sumbernya, gelombang-gelombang tersebut secara bertahap 
+                                menjadi lebih terorganisir dan membentuk pola swell yang kita kenal. Proses ini menghasilkan 
+                                ombak yang lebih halus dan dapat diprediksi.
+                            </p>
+                            
+                            <h3>Karakteristik Perjalanan</h3>
+                            <p>
+                                Swell dapat melakukan perjalanan ribuan kilometer melintasi lautan tanpa kehilangan banyak energi. 
+                                Ini membuat swell yang terbentuk di satu belahan dunia dapat dirasakan di pantai-pantai yang sangat jauh, 
+                                menciptakan kondisi surfing yang sempurna.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Karakteristik Utama</h3>
+                            <ul class="feature-list">
+                                <li>Tinggi ombak: 1 - 5 meter (bisa lebih tinggi)</li>
+                                <li>Periode gelombang: 8 - 20 detik</li>
+                                <li>Kecepatan rambat: 20 - 40 m/s</li>
+                                <li>Jarak tempuh: Hingga ribuan kilometer</li>
+                                <li>Pola: Sangat teratur dan konsisten</li>
+                                <li>Manfaat: Sangat baik untuk surfing profesional</li>
+                                <li>Prediksi: Mudah diprediksi dengan teknologi modern</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== TSUNAMI DETAIL PAGE =============== -->
+        <section class="page-section" id="tsunamiPage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    
+                    <div class="detail-header">
+                        <h1 class="detail-title">Tsunami</h1>
+                        <p class="detail-subtitle">Gelombang Raksasa yang Menghancurkan</p>
+                    </div>
+                    
+                    <!-- ⚠️ UBAH GAMBAR DETAIL DI SINI ⚠️ -->
+                    <div class="detail-image-container">
+                        <img src="assets/Tsunami.jpeg" alt="Tsunami Detail" class="detail-image">
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Apa itu Tsunami?</h3>
+                            <p>
+                                Tsunami adalah serangkaian gelombang laut yang sangat besar dan kuat yang disebabkan oleh perpindahan 
+                                massa air dalam jumlah besar. Penyebab utamanya adalah gempa bumi bawah laut, letusan gunung berapi, 
+                                tanah longsor, atau bahkan tumbukan meteor.
+                            </p>
+                            <p>
+                                Kata "tsunami" berasal dari bahasa Jepang yang berarti "gelombang pelabuhan". 
+                                Di lautan terbuka, tsunami mungkin hanya setinggi 1 meter, tetapi saat mendekati pantai, 
+                                tingginya dapat meningkat drastis hingga puluhan meter.
+                            </p>
+                            
+                            <h3>Bahaya dan Dampak</h3>
+                            <p>
+                                Tsunami merupakan salah satu bencana alam paling mematikan. Kecepatannya di lautan terbuka bisa mencapai 
+                                800 km/jam, setara dengan kecepatan pesawat jet. Energi yang dibawa tsunami sangat besar, 
+                                mampu menghancurkan bangunan, infrastruktur, dan menyebabkan korban jiwa dalam jumlah besar.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Karakteristik Utama</h3>
+                            <ul class="feature-list">
+                                <li>Tinggi ombak: 1 meter (laut dalam) - 30+ meter (pantai)</li>
+                                <li>Kecepatan: 500 - 800 km/jam di laut dalam</li>
+                                <li>Panjang gelombang: 100 - 500 km</li>
+                                <li>Periode: 10 menit - 2 jam</li>
+                                <li>Penyebab: Gempa bumi, letusan vulkanik, longsor</li>
+                                <li>Dampak: Sangat destruktif, berpotensi ribuan korban</li>
+                                <li>Peringatan: Sistem early warning tersedia di banyak negara</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== TIDAL WAVE DETAIL PAGE =============== -->
+        <section class="page-section" id="tidalwavePage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    
+                    <div class="detail-header">
+                        <h1 class="detail-title">Tidal Wave</h1>
+                        <p class="detail-subtitle">Pasang Surut - Ritme Laut yang Teratur</p>
+                    </div>
+                    
+                    <!-- ⚠️ UBAH GAMBAR DETAIL DI SINI ⚠️ -->
+                    <div class="detail-image-container">
+                        <img src="assets/Tidal.jpg" alt="Tidal Wave Detail" class="detail-image">
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Apa itu Tidal Wave?</h3>
+                            <p>
+                                Tidal wave atau gelombang pasang surut adalah pergerakan naik turunnya permukaan air laut yang disebabkan 
+                                oleh gaya gravitasi bulan dan matahari. Ini adalah fenomena alami yang terjadi secara teratur dan dapat diprediksi.
+                            </p>
+                            <p>
+                                Meskipun sering disalahartikan dengan tsunami, tidal wave sebenarnya adalah fenomena yang sama sekali berbeda. 
+                                Pasang surut terjadi dua kali sehari dan merupakan bagian normal dari siklus laut.
+                            </p>
+                            
+                            <h3>Mekanisme Pembentukan</h3>
+                            <p>
+                                Bulan memiliki pengaruh gravitasi yang lebih besar pada pasang surut dibandingkan matahari karena jaraknya 
+                                yang lebih dekat ke Bumi. Saat bulan dan matahari sejajar (purnama atau bulan baru), terjadi pasang perbani 
+                                dengan amplitudo maksimal. Saat keduanya membentuk sudut 90 derajat, terjadi pasang perbani dengan amplitudo minimal.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Karakteristik Utama</h3>
+                            <ul class="feature-list">
+                                <li>Tinggi pasang: 0.5 - 15 meter (tergantung lokasi)</li>
+                                <li>Periode: Sekitar 12 jam 25 menit</li>
+                                <li>Frekuensi: 2 kali pasang dan 2 kali surut per hari</li>
+                                <li>Penyebab: Gaya gravitasi bulan dan matahari</li>
+                                <li>Prediktabilitas: Sangat tinggi, dapat dihitung presisi</li>
+                                <li>Manfaat: Navigasi maritim, budidaya laut, pembangkit listrik</li>
+                                <li>Dampak: Umumnya aman, penting untuk ekosistem pesisir</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== ROGUE WAVE DETAIL PAGE =============== -->
+        <section class="page-section" id="roguewavePage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    
+                    <div class="detail-header">
+                        <h1 class="detail-title">Rogue Wave</h1>
+                        <p class="detail-subtitle">Gelombang Monster yang Misterius</p>
+                    </div>
+                    
+                    <!-- ⚠️ UBAH GAMBAR DETAIL DI SINI ⚠️ -->
+                    <div class="detail-image-container">
+                        <img src="assets/Roguee.jpg" alt="Rogue Wave Detail" class="detail-image">
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Apa itu Rogue Wave?</h3>
+                            <p>
+                                Rogue wave atau gelombang nakal adalah gelombang laut yang sangat besar dan muncul tiba-tiba, 
+                                jauh melebihi tinggi ombak di sekitarnya. Tingginya bisa mencapai 2-3 kali lipat dari ombak normal, 
+                                bahkan pernah tercatat setinggi 30 meter atau lebih.
+                            </p>
+                            <p>
+                                Dulunya dianggap sebagai mitos pelaut, keberadaan rogue wave kini telah dikonfirmasi secara ilmiah. 
+                                Gelombang ini sangat berbahaya bahkan untuk kapal-kapal besar karena muncul tanpa peringatan dan 
+                                memiliki kekuatan destruktif yang luar biasa.
+                            </p>
+                            
+                            <h3>Teori Pembentukan</h3>
+                            <p>
+                                Beberapa teori menjelaskan pembentukan rogue wave: (1) Superposisi konstruktif - beberapa gelombang 
+                                bertemu dan bergabung menjadi satu gelombang raksasa, (2) Fokus geografis - topografi dasar laut 
+                                mengarahkan energi gelombang ke satu titik, (3) Arus laut yang berlawanan - interaksi kompleks 
+                                antara gelombang dan arus kuat dapat memperbesar amplitudo gelombang secara drastis.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Karakteristik Utama</h3>
+                            <ul class="feature-list">
+                                <li>Tinggi ombak: 15 - 30+ meter</li>
+                                <li>Karakteristik: Muncul tiba-tiba, dinding air vertikal</li>
+                                <li>Frekuensi: Sangat jarang, tidak dapat diprediksi</li>
+                                <li>Durasi: Beberapa detik hingga menit</li>
+                                <li>Lokasi: Lautan terbuka, zona pertemuan arus</li>
+                                <li>Bahaya: Ekstrem - dapat menenggelamkan kapal besar</li>
+                                <li>Penelitian: Masih terus dipelajari hingga kini</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== SEICHE DETAIL PAGE =============== -->
+        <section class="page-section" id="seichePage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    
+                    <div class="detail-header">
+                        <h1 class="detail-title">Seiche</h1>
+                        <p class="detail-subtitle">Osilasi Air dalam Perairan Tertutup</p>
+                    </div>
+                    
+                    <!-- ⚠️ UBAH GAMBAR DETAIL DI SINI ⚠️ -->
+                    <div class="detail-image-container">
+                        <img src="assets/Seiche.avif" alt="Seiche Detail" class="detail-image">
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Apa itu Seiche?</h3>
+                            <p>
+                                Seiche adalah osilasi atau ayunan permukaan air dalam perairan tertutup atau semi-tertutup seperti danau, 
+                                teluk, pelabuhan, atau bahkan kolam renang besar. Fenomena ini mirip dengan air yang bergoyang-goyang 
+                                dalam bak mandi, namun dalam skala yang jauh lebih besar.
+                            </p>
+                            <p>
+                                Nama "seiche" berasal dari bahasa Swiss-Perancis yang berarti "mengayun bolak-balik". 
+                                Meskipun tidak seterkenal tsunami, seiche dapat menyebabkan kerusakan signifikan di pelabuhan 
+                                dan daerah pesisir karena perubahan ketinggian air yang tiba-tiba dan berulang.
+                            </p>
+                            
+                            <h3>Penyebab dan Mekanisme</h3>
+                            <p>
+                                Seiche dapat dipicu oleh berbagai faktor: perubahan tekanan atmosfer mendadak, angin kencang, 
+                                gempa bumi, tanah longsor, atau bahkan gelombang tsunami yang masuk ke perairan tertutup. 
+                                Setelah gangguan awal, air akan terus berosilasi dengan periode yang ditentukan oleh dimensi 
+                                dan kedalaman badan air tersebut, mirip dengan frekuensi resonansi.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Karakteristik Utama</h3>
+                            <ul class="feature-list">
+                                <li>Tinggi osilasi: 0.1 - 3 meter (tergantung ukuran perairan)</li>
+                                <li>Periode: Beberapa menit hingga beberapa jam</li>
+                                <li>Lokasi: Danau, teluk, pelabuhan, waduk</li>
+                                <li>Penyebab: Tekanan atmosfer, angin, gempa bumi</li>
+                                <li>Durasi: Dapat berlangsung berjam-jam setelah pemicu awal</li>
+                                <li>Dampak: Kerusakan pada kapal, dermaga, dan infrastruktur</li>
+                                <li>Frekuensi: Relatif sering di perairan yang rentan</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== ABOUT PAGE =============== -->
+        <section class="page-section" id="aboutPage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    <div class="detail-header">
+                        <h1 class="detail-title">Tentang WaveForm</h1>
+                        <p class="detail-subtitle">Platform Edukasi Fenomena Ombak Laut</p>
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Misi Kami</h3>
+                            <p>
+                                WaveForm adalah platform edukasi yang didedikasikan untuk memberikan pemahaman mendalam tentang 
+                                berbagai fenomena ombak laut. Kami percaya bahwa dengan memahami kekuatan dan karakteristik ombak, 
+                                masyarakat dapat lebih menghargai keindahan laut sekaligus lebih waspada terhadap bahayanya.
+                            </p>
+                            
+                            <h3>Apa yang Kami Tawarkan</h3>
+                            <p>
+                                Melalui visualisasi interaktif, konten edukatif yang komprehensif, dan penjelasan ilmiah yang mudah 
+                                dipahami, WaveForm membantu siswa, peneliti, dan siapa pun yang tertarik dengan oseanografi untuk 
+                                mempelajari berbagai tipe ombak - dari yang paling umum hingga yang paling ekstrem.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Fitur Utama</h3>
+                            <ul class="feature-list">
+                                <li>Penjelasan detail 6 tipe ombak utama</li>
+                                <li>Visualisasi interaktif fenomena ombak</li>
+                                <li>Konten berbasis penelitian ilmiah terkini</li>
+                                <li>Informasi keselamatan dan mitigasi bencana</li>
+                                <li>Interface yang user-friendly dan responsif</li>
+                                <li>Konten dalam Bahasa Indonesia</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== GALLERY PAGE =============== -->
+        <section class="page-section" id="galleryPage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    <div class="detail-header">
+                        <h1 class="detail-title">Galeri Ombak</h1>
+                        <p class="detail-subtitle">Koleksi Visual Fenomena Ombak</p>
+                    </div>
+                    
+                    <div class="wave-grid">
+                        <!-- ⚠️ TAMBAHKAN GAMBAR GALERI DI SINI ⚠️ -->
+                        <div class="wave-card">
+                            <img src="assets/Barrel.jpeg" alt="Gallery 1" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Perfect Barrel</h3>
+                                <p class="wave-card-description">Formasi ombak sempurna di pantai tropis</p>
+                            </div>
+                        </div>
+                        
+                        <div class="wave-card">
+                            <img src="assets/Storm.jpg" alt="Gallery 2" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Storm Waves</h3>
+                                <p class="wave-card-description">Ombak besar saat badai menerjang</p>
+                            </div>
+                        </div>
+                        
+                        <div class="wave-card">
+                            <img src="assets/Coastal.jpeg" alt="Gallery 3" class="wave-card-image">
+                            <div class="wave-card-content">
+                                <h3 class="wave-card-title">Coastal Beauty</h3>
+                                <p class="wave-card-description">Keindahan ombak di garis pantai</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- =============== CONTACT PAGE =============== -->
+        <section class="page-section" id="contactPage">
+            <div class="wave-detail-section">
+                <div class="detail-container">
+                    <div class="detail-header">
+                        <h1 class="detail-title">Hubungi Kami</h1>
+                        <p class="detail-subtitle">Ada pertanyaan? Kami siap membantu</p>
+                    </div>
+                    
+                    <div class="detail-content">
+                        <div class="detail-text">
+                            <h3>Informasi Kontak</h3>
+                            <p>
+                                Jika Anda memiliki pertanyaan, saran, atau ingin berkolaborasi dengan WaveForm, 
+                                jangan ragu untuk menghubungi kami melalui informasi di bawah ini.
+                            </p>
+                            <p>
+                                <strong>Nama :</strong> Marco Valentino Sugiarto <br>
+                                <strong>NIM :</strong> 062302063 <br>
+                                <strong>Universitas :</strong> Universitas Sugeng Hartono
+                            </p>
+                            
+                            <h3>Media Sosial</h3>
+                            <p>
+                                Ikuti kami di media sosial untuk mendapatkan update terbaru tentang fenomena ombak, 
+                                konten edukatif, dan berita oseanografi.
+                            </p>
+                        </div>
+                        
+                        <div class="detail-features">
+                            <h3>Jam Operasional</h3>
+                            <ul class="feature-list">
+                                <li>Senin - Jumat: 09:00 - 17:00 WIB</li>
+                                <li>Sabtu: 10:00 - 14:00 WIB</li>
+                                <li>Minggu & Hari Libur: Tutup</li>
+                                <li>Response time email: 1-2 hari kerja</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="back-btn" onclick="showPage('home'); return false;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Kembali ke Home
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <h3 class="footer-title">WaveForm</h3>
+                <p class="footer-text">
+                    Platform edukasi untuk memahami fenomena ombak laut<br>
+                    Eksplorasi, pelajari, dan hargai kekuatan lautan
+                </p>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 WaveForm. All rights reserved. | Made with passion for ocean education</p>
+                </div>
+            </div>
+        </footer>
+        
+    </div>
+    
+    <script>
+        // =============== LANDING PAGE TRANSITION ===============
+        function enterApp() {
+            const landingPage = document.getElementById('landingPage');
+            const mainContent = document.getElementById('mainContent');
+            
+            landingPage.classList.add('hide');
+            
+            setTimeout(() => {
+                mainContent.classList.add('active');
+            }, 400);
+        }
+        
+        // =============== PAGE NAVIGATION ===============
+        function showPage(pageName) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            const selectedPage = document.getElementById(pageName + 'Page');
+            if (selectedPage) {
+                selectedPage.classList.add('active');
+            }
+            
+            // Update nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Set active nav link
+            const activeNavLink = document.querySelector(`[onclick*="${pageName}"]`);
+            if (activeNavLink) {
+                activeNavLink.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Close mobile menu if open
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileToggle');
+            navMenu.classList.remove('active');
+            mobileToggle.classList.remove('active');
+        }
+        
+        // =============== NAVBAR SCROLL EFFECT ===============
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // =============== MOBILE MENU TOGGLE ===============
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+                mobileToggle.classList.remove('active');
+            }
+        });
+        
+        // =============== SMOOTH ANIMATIONS ON LOAD ===============
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+        
+    </script>
+</body>
+</html>
